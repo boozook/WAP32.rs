@@ -1,0 +1,13 @@
+[package]
+name = "wap-wwd"
+version = "0.1.0"
+authors = ["fzzr <a@koz.email>"]
+edition = "2018"
+
+[dependencies]
+wap-res = { path = "../res" }
+wap-utils = { path = "../utils" }
+zero = "0.1.2"
+# TODO: check & upd dep's ver:
+libflate = "0.1.14" # or flate2 = "0.2" but `corrupt deflate stream`
+byteorder = "1.2.1" # for no_std: byteorder = { version = "1", default-features = false }

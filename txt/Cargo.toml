@@ -1,0 +1,11 @@
+[package]
+name = "gruntz-txt"
+version = "0.1.0"
+authors = ["fzzr <a@koz.email>"]
+edition = "2018"
+
+[dependencies]
+rust-ini = "0.13.0"
+
+[dev-dependencies]
+wap-crypto = { path = "../crypto" }

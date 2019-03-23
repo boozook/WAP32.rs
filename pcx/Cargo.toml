@@ -1,0 +1,11 @@
+[package]
+name = "wap-pcx"
+version = "0.1.0"
+authors = ["fzzr <a@koz.email>"]
+edition = "2018"
+
+[dependencies]
+pcx = "0.2.3"
+wap-res = { path = "../res" }
+wap-img = { path = "../img" }
+# wap-utils = { path = "../utils" }

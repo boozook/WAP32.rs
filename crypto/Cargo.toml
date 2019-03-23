@@ -1,0 +1,9 @@
+[package]
+name = "wap-crypto"
+version = "0.1.0"
+authors = ["fzzr <a@koz.email>"]
+edition = "2018"
+
+[dependencies]
+blowfish = "0.3.0"
+# bswap = "0.4.0"

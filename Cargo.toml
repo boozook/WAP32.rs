@@ -1,0 +1,51 @@
+# https://doc.rust-lang.org/nightly/cargo/reference/unstable.html#profile-overrides
+cargo-features = ["profile-overrides"]
+
+
+[package]
+name = "wap"
+version = "0.1.0"
+authors = ["fzzr <a@koz.email>"]
+edition = "2018"
+
+[dependencies]
+wap-res = { path = "res" }
+wap-wwd = { path = "wwd" }
+wap-pcx = { path = "pcx" }
+wap-ani = { path = "ani" }
+wap-img = { path = "img" }
+wap-crypto = { path = "crypto" }
+wap-utils = { path = "utils" }
+gruntz-txt = { path = "txt", optional = true }
+
+[features]
+gruntz = ["gruntz-txt"]
+default = ["gruntz"]
+
+
+[profile.dev.overrides.pcx]
+opt-level = 3
+[profile.dev.overrides.image]
+opt-level = 3
+[profile.dev.overrides.libflate]
+opt-level = 3
+[profile.dev.overrides.byteorder]
+opt-level = 3
+
+# All dependencies (but not this crate itself or any workspace member)
+# will be compiled with -Copt-level=3 . This includes build dependencies.
+# [profile.dev.overrides."*"]
+# opt-level = 3
+
+
+[workspace]
+members = [
+    "res",
+    "wwd",
+    "pcx",
+    "ani",
+    "txt",
+    "img",
+    "crypto",
+    "utils",
+]

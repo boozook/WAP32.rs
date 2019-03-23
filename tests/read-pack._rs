@@ -1,0 +1,52 @@
+#[cfg(all(test, any(ios, target_os = "ios")))]
+extern crate dinghy_test;
+extern crate wap;
+
+mod test_data_paths;
+use self::test_data_paths::*;
+
+use std::fs::File;
+use std::path::PathBuf;
+
+use wap::res::Package;
+
+
+#[inline]
+fn create_package(filename: &str) -> Package<File> {
+	let path = [get_dir(), PathBuf::from(filename)].iter().collect::<PathBuf>();
+	println!("read package from path: {:?}", path);
+	Package::new_with_path(&path).expect(&format!("Can not create the package {:?}.", filename))
+}
+
+#[test]
+fn package_empty() {
+	let package = create_package(GRUNTZ_ZZZ);
+	assert_eq!(0, package.nodes.len());
+	assert_eq!(0, package.directories.len());
+}
+
+#[test]
+fn read_package_index_zzz() {
+	let mut package = create_package(GRUNTZ_ZZZ);
+	package.read().unwrap();
+
+	assert_eq!(7, package.nodes.len());
+	assert_eq!(5, package.directories.len());
+
+	for (_path, filenames) in &package.directories {
+		assert!(filenames.len() > 0);
+	}
+}
+
+#[test]
+fn read_package_index_rez() {
+	let mut package = create_package(GRUNTZ_REZ);
+	package.read().unwrap();
+
+	assert_eq!(21303, package.nodes.len());
+	assert_eq!(1784, package.directories.len());
+
+	for (_path, filenames) in &package.directories {
+		assert!(filenames.len() > 0);
+	}
+}

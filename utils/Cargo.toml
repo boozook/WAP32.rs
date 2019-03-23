@@ -1,0 +1,7 @@
+[package]
+name = "wap-utils"
+version = "0.1.0"
+authors = ["fzzr <a@koz.email>"]
+edition = "2018"
+
+[dependencies]

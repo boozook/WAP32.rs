@@ -1,0 +1,282 @@
+#![allow(non_snake_case)]
+
+extern crate wap;
+
+use std::fs::File;
+use std::path::PathBuf;
+use wap::ReadNode;
+use wap::prelude::*;
+use wap::raw::uri;
+use wap::raw::wwd::RawWwd;
+use wap::raw::rez::Package;
+
+
+#[cfg(all(test, any(ios, target_os = "ios")))]
+extern crate dinghy_test;
+mod test_data_paths;
+use test_data_paths::*;
+
+
+#[inline]
+fn create_package(filename: &str) -> Package<File> {
+	let path = [get_dir(), PathBuf::from(filename)].iter().collect::<PathBuf>();
+	println!("read package from path: {:?}", path);
+	Package::new_with_path(&path).expect(&format!("Can not create the package {:?}.", filename))
+}
+
+#[inline]
+fn create_package_manager() -> PackageManager<File> {
+	let mut pm = PackageManager::new();
+	for path in get_all().iter() {
+		println!("PM <- read package from path: {:?}", path);
+		match pm.add(&path) {
+			Ok(_) => continue,
+			Err(error) => panic!("{:?}", error),
+		}
+	}
+	pm
+}
+
+
+#[test]
+fn dinghy_test_data_paths() {
+	for path in get_all().iter() {
+		assert!(std::fs::metadata(path).is_ok());
+	}
+}
+
+
+#[test]
+fn read_all_in_AREA8_WORLDZ_LEVEL31_DWW() {
+	let mut pm = create_package_manager();
+	let uri = "AREA8\\WORLDZ\\LEVEL31.DWW";
+	let wwd = {
+		let get = pm.get(&uri.as_bytes().to_vec());
+		println!("uri: {:?}", uri);
+		if let Some(mut node) = get {
+			// let wwd: wwd::Wwd = node.read()?;
+			let wwd: RawWwd = match node.read() {
+				Ok(wwd) => wwd,
+				Err(error) => panic!(format!("no wwd with error: {:?}", error)),
+			};
+			wwd
+		// read_as_wwd(node.0, &mut node.1)?
+		} else {
+			panic!("no wwd")
+		}
+	};
+	// println!("wwd.images: {:?}", zero::read_str(&wwd.properties.images));
+
+	let urier = uri::UriBuilder::from_raw(&wwd.1);
+	for plane in wwd.2 {
+		println!("plane.i: {}", plane.i);
+
+		for obj in &plane.objects {
+			// graphic frames:
+			{
+				let uri = urier.trait_uri_for(&obj.traits.graphic[..]);
+				let dir = pm.dir(&uri).unwrap();
+				assert!(dir.len() > 0);
+
+				for name in dir {
+					let frame_uri = [&uri[..], &name[..]].concat();
+					assert!(pm.has(&frame_uri));
+				}
+			}
+
+			// animation frames:
+			{
+				let uri = urier.trait_uri_for(&obj.traits.animation[..]);
+				if let Some(dir) = pm.dir(&uri) {
+					assert!(dir.len() > 0);
+
+					for name in dir {
+						let frame_uri = [&uri[..], &name[..]].concat();
+						assert!(pm.has(&frame_uri));
+					}
+				};
+			}
+		}
+
+
+		// find all tiles:
+		for tile_id in &plane.tiles {
+			if tile_id == &uri::tilez_constz::EMPTY_TID {
+				continue;
+			}
+
+			let uri = urier.tile_by(*tile_id, &plane.tileset_names[0]);
+			if pm.has(&uri) {
+
+			} else {
+				println!("NO {:?}", uri);
+			}
+		}
+	}
+}
+
+
+#[test]
+fn find_all_wwd_objects_graphics_and_animation_frames_and_tiles() {
+	let mut pm = create_package_manager();
+	// we need a package (just now) to know all .wwd files:
+	let mut package = create_package(GRUNTZ_REZ);
+	package.read().unwrap();
+
+	let uri_dww_ext = ".DWW".as_bytes();
+	for (uri, _) in package.nodes {
+		if uri.ends_with(uri_dww_ext) {
+			let wwd = {
+				let got = pm.get(&uri.to_vec());
+				// println!("uri: {:?} = {:?}", uri, got);
+				if let Some(mut node) = got {
+					// let wwd: wwd::Wwd = match node.read() {
+					let wwd: RawWwd = match node.read() {
+						Ok(wwd) => wwd,
+						Err(error) => panic!(format!("no wwd with error: {:?}", error)),
+					};
+					wwd
+				} else {
+					panic!("no wwd")
+				}
+			};
+
+			// let urier = uri::uri_builder_for(&wwd.1);
+			let urier = uri::UriBuilder::from_raw(&wwd.1);
+			for plane in wwd.2 {
+				for obj in &plane.objects {
+					// graphic frames:
+					{
+						let uri = urier.graphic_for(&obj);
+						let dir = pm.dir(&uri).unwrap();
+						assert!(dir.len() > 0);
+
+						for name in dir {
+							let frame_uri = [&uri[..], &name[..]].concat();
+							assert!(pm.has(&frame_uri));
+						}
+					}
+					// animation frames:
+					{
+						let uri = urier.animation_for(&obj);
+						if let Some(dir) = pm.dir(&uri) {
+							assert!(dir.len() > 0);
+
+							for name in dir {
+								let frame_uri = [&uri[..], &name[..]].concat();
+								assert!(pm.has(&frame_uri));
+							}
+						};
+					}
+				}
+
+				// tiles:
+				for tile_id in &plane.tiles {
+					if tile_id == &uri::tilez_constz::EMPTY_TID {
+						continue;
+					}
+
+					let uri = urier.tile_by(*tile_id, &plane.tileset_names[0]);
+					assert!(pm.has(&uri));
+				}
+			}
+		}
+	}
+
+	assert!(true);
+}
+
+
+#[test]
+fn package_manager_search_dirs() {
+	let pm = create_package_manager();
+
+	let uri = "AREA8\\WORLDZ\\".as_bytes().to_vec();
+	if let Some(dir) = pm.dir(&uri) {
+		// ["LEVEL29", "LEVEL30", "LEVEL31", "LEVEL32", "LEVEL29", "LEVEL31"]
+		assert_eq!(4, dir.len());
+	} else {
+		panic!("Dir {:?} not found!", uri)
+	}
+}
+
+
+#[test]
+fn package_manager_search_patched() {
+	let mut pm = create_package_manager();
+
+	// SIZE OF: "REZ::/AREA8/WORLDZ/LEVEL31.DWW" = 21882
+	// SIZE OF: "ZZZ::/AREA8/WORLDZ/LEVEL31.DWW" = 21868
+	let uri = "AREA8\\WORLDZ\\LEVEL31.DWW".as_bytes().to_vec();
+	assert!(pm.has(&uri));
+	let np = pm.get(&uri).unwrap();
+	assert_eq!(21868, np.0.size);
+}
+
+
+#[test]
+fn read_all_pcx() {
+	use raw::pcx;
+	let mut pm = create_package_manager();
+	let pcxs: Vec<Vec<u8>> = {
+		let ext: &[u8] = "XCP".as_bytes();
+		let iter = pm.all().filter(|p| p[p.len() - ext.len()..] == *ext);
+		iter.cloned().collect()
+	};
+	for k in pcxs {
+		let np = pm.get(&k).unwrap();
+		match pcx::read_as_pcx(np.0, np.1) {
+			Ok(pixels) => assert!(pixels.buffer.len() > 0 && pixels.buffer.len() % 2 == 0),
+			Err(error) => panic!("{}", error),
+		}
+	}
+}
+
+
+#[test]
+fn read_all_pid_rgb() {
+	use raw::pid;
+	let mut pm = create_package_manager();
+	let pids: Vec<Vec<u8>> = {
+		let ext: &[u8] = "DIP".as_bytes();
+		let iter = pm.all().filter(|p| p.ends_with(ext));
+		iter.cloned().collect()
+	};
+	for k in pids {
+		let np = pm.get(&k).unwrap();
+		let mut pid = pid::read_as_pid_rgb8(np.0, np.1).unwrap();
+
+		assert!(pid.pixels.len() > 0);
+		assert!(pid.pixels.len() % 2 == 0);
+		assert_eq!(pid.pixels.len() as u32, (pid.info.size[0] * pid.info.size[1]) * 3);
+	}
+}
+
+#[test]
+fn read_all_pid_parts_rgba() {
+	let mut pm = create_package_manager();
+	let pids: Vec<Vec<u8>> = {
+		let ext: &[u8] = "DIP".as_bytes();
+		let iter = pm.all().filter(|p| p.ends_with(ext));
+		iter.cloned().collect()
+	};
+	for k in pids {
+		let mut np = pm.get(&k).unwrap();
+		let mut pid: PidParts<RawPalette<Vec<u8>, u8>, Vec<u8>> = np.read().unwrap();
+		assert!(pid.info.size[0] * pid.info.size[1] == pid.indices.len() as u32);
+
+		if !pid.info.lights {
+			let rgb = pid.build_rgb();
+			assert!(rgb.len() > 0);
+			// assert!(rgb.iter().max() > Some(&0));
+			assert!(rgb.len() / 3 == pid.indices.len());
+
+			let rgba_masked = pid.build_rgba();
+			let rgba_composed = pid.build_rgba_with(&vec![0xFF; rgba_masked.len() / 4]);
+			assert!(rgba_masked.len() / 4 == pid.indices.len());
+			assert_eq!(rgba_masked.len(), rgba_composed.len());
+			assert!(rgba_composed.len() / 4 == pid.indices.len());
+			assert_eq!(rgba_masked.len() as u32, pid.info.size[0] * pid.info.size[1] * 4);
+		}
+	}
+}

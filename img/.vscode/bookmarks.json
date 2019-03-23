@@ -1,0 +1,32 @@
+[
+	{
+		"path": "/Users/ak/Developer/Projects/Gruntz-rewrite/wap/src/raw/pal.rs",
+		"bookmarks": [
+			{
+				"line": 112,
+				"column": 39,
+				"label": ""
+			}
+		]
+	},
+	{
+		"path": "$ROOTPATH$/src/pid.rs",
+		"bookmarks": [
+			{
+				"line": 343,
+				"column": 21,
+				"label": ""
+			}
+		]
+	},
+	{
+		"path": "$ROOTPATH$/src/pixels.rs",
+		"bookmarks": [
+			{
+				"line": 9,
+				"column": 39,
+				"label": ""
+			}
+		]
+	}
+]
