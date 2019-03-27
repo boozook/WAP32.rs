@@ -7,10 +7,10 @@ extern crate zero;
 
 use crate::res::node::Node;
 use crate::utils::size_of;
-use crate::pixels::*;
-use crate::pixels::format::*;
-use crate::point::*;
-use crate::pal::*;
+use img::pixels::*;
+use img::pixels::format::*;
+use img::point::*;
+use img::pal::*;
 
 
 type Result<T> = std::result::Result<T, std::io::Error>;
@@ -43,7 +43,6 @@ struct PidInfoInternal {
 	/// Bynary RLE comression.
 	rle: bool,
 }
-
 
 #[derive(Debug)]
 pub struct Pid<PalFmt: PxFmt> {

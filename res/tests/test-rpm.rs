@@ -52,5 +52,5 @@ fn create_rpm_builder() -> RpmBuilder {
 fn rpm_builder() {
 	//
 	let mut rpm = create_rpm_builder().build();
-
+	unimplemented!();
 }

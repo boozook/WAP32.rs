@@ -1,0 +1,5 @@
+{
+	"rust.cfg_test": true,
+	"rust.no_default_features": false,
+
+}

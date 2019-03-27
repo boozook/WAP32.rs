@@ -6,6 +6,7 @@ use std::io::{Read, Seek};
 use crate::node::NodeType;
 use crate::pack::Index;
 use crate::pack::{Package, PackageType};
+use crate::pack::read_package;
 
 
 pub enum ResourceType {
@@ -21,7 +22,8 @@ pub struct Fm {}
 /// Prioritized storage for `Package`s.
 #[derive(Debug)]
 pub struct Rpm {
-	main: Package,
+	// TODO: XXX: pubs is temprly!
+	pub main: Option<Package>,
 	patch: Option<Package>,
 	voice: Option<Package>,
 	extra: Vec<Package>,
@@ -34,7 +36,7 @@ pub struct RpmBuilder {
 
 impl RpmBuilder {
 	pub fn new(main: Package) -> Self {
-		Self { inner: Rpm { main,
+		Self { inner: Rpm { main: Some(main),
 		                    patch: None,
 		                    voice: None,
 		                    extra: Default::default(), }, }
@@ -54,21 +56,39 @@ impl RpmBuilder {
 				}
 			},
 			PackageType::Extra => self.inner.extra.push(pack),
-			PackageType::Main => panic!("Main pack is already set: '{}', new: '{}'", self.inner.main.uri(), pack.uri()),
+			PackageType::Main => {
+				if self.inner.main.is_none() {
+					self.inner.main.replace(pack);
+				} else {
+					panic!("Main pack is already set: '{:?}', new: '{}'", &self.inner.main, pack.uri());
+				}
+			}
 		}
 	}
 
-	fn read_all(&mut self) {
+	fn read_all(&mut self) -> Result<(), std::io::Error> {
+		// TODO: XXX: FIXME: There is TEMP impl!
 
+		let pack = if let Some(pack) = self.inner.main.take() {
+			let uri = pack.uri();
+			let file = File::open(uri)?;
+			let mut opened = pack.open_with(file);
+			read_package(&mut opened)?;
+			opened.close()
+		} else { unimplemented!() };
+		self.inner.main.replace(pack);
+		// let mut pack = &mut self.inner.main;
+
+		Ok(())
 	}
 
 	/// Read index for all packages,
 	/// consolidate indexes into one.
 	pub fn consolidate(&mut self) {}
 
-	pub fn build(mut self) -> Rpm {
-		self.read_all();
+	pub fn build(mut self) -> Result<Rpm, std::io::Error> {
+		self.read_all()?;
 		self.consolidate();
-		self.inner
+		Ok(self.inner)
 	}
 }

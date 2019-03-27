@@ -1,0 +1,22 @@
+[package]
+name = "wap-pid"
+version = "0.1.0"
+authors = ["fzzr <a@koz.email>"]
+edition = "2018"
+
+[dependencies]
+zero = "0.1.2"
+rgb = "0.8.13"
+wap-res = { path = "../res" }
+wap-img = { path = "../img" }
+wap-utils = { path = "../utils" }
+
+image = { version = "0.20.0", features = ["png_codec"], default-features = false, optional = true }
+
+
+[features]
+default = ["image"]
+
+
+[dev-dependencies]
+image = "0.20.0"

@@ -13,6 +13,7 @@ wap-res = { path = "res" }
 wap-wwd = { path = "wwd" }
 wap-pcx = { path = "pcx" }
 wap-ani = { path = "ani" }
+wap-pid = { path = "pid" }
 wap-img = { path = "img" }
 wap-crypto = { path = "crypto" }
 wap-utils = { path = "utils" }
@@ -23,12 +24,12 @@ gruntz = ["gruntz-txt"]
 default = ["gruntz"]
 
 
-[profile.dev.overrides.pcx]
-opt-level = 3
+# [profile.dev.overrides.pcx]
+# opt-level = 3
 [profile.dev.overrides.image]
 opt-level = 3
-[profile.dev.overrides.libflate]
-opt-level = 3
+# [profile.dev.overrides.libflate]
+# opt-level = 3
 [profile.dev.overrides.byteorder]
 opt-level = 3
 
@@ -45,6 +46,7 @@ members = [
     "pcx",
     "ani",
     "txt",
+    "pid",
     "img",
     "crypto",
     "utils",
