@@ -8,20 +8,19 @@ pub struct Node {
 	/// Size of block.
 	pub size: u32,
 
-	/// Type of node
-	pub t: NodeType,
+	// /// Type of node
+	// pub t: Format,
 }
 
 pub struct TypedNode<'n>
-
- {
+{
 	pub n: &'n Node,
-	pub t: NodeType,
+	pub t: Format,
 }
 
 #[repr(u8)]
 #[derive(PartialEq, Eq, Debug)]
-pub enum NodeType {
+pub enum Format {
 	/// Animation
 	Ani,
 	/// Palette
@@ -40,8 +39,8 @@ pub enum NodeType {
 }
 
 
-pub fn type_from_ext(ext: &[u8]) -> NodeType {
-	use self::NodeType::*;
+pub fn type_from_ext(ext: &[u8]) -> Format {
+	use self::Format::*;
 
 	match &ext[..3] {
 		b"INA" => Ani,

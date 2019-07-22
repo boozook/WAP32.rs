@@ -6,7 +6,7 @@ edition = "2018"
 
 [dependencies]
 wap-res = { path = "../res" }
-wap-utils = { path = "../utils" }
+wap-common = { path = "../common" }
 zero = "0.1.2"
 # TODO: check & upd dep's ver:
 libflate = "0.1.14" # or flate2 = "0.2" but `corrupt deflate stream`

@@ -1,14 +1,14 @@
-extern crate wap_img;
-extern crate wap_pid;
-extern crate wap_res;
+extern crate wap_img as img;
+extern crate wap_pid as pid;
+extern crate wap_res as res;
 #[cfg(feature = "image")]
 extern crate image;
 
-use wap_img::point::*;
-use wap_img::pixels::*;
-use wap_img::pixels::{format, Pxls};
-use wap_pid::pid::{Pid, read_as_pid};
-use wap_res::node::{Node, NodeType};
+use img::point::*;
+use img::pixels::*;
+use img::pixels::{format, Pxls};
+use pid::pid::{Pid, read_as_pid};
+use res::node::Node;
 
 mod paths {
 	pub const PID_PAL: &str = "tests/data/PERFECT.PID";
@@ -24,7 +24,7 @@ fn read_pid_file(path: &str) -> Result<Pid<format::RGB>, std::io::Error> {
 	let mut file = File::open(path)?;
 	let node = Node { offset: 0,
 	                  size: std::fs::metadata(&path)?.len() as u32,
-	                  t: NodeType::Pid };
+	                  /* t: Format::Pid */ };
 	read_as_pid(&node, &mut file)
 }
 

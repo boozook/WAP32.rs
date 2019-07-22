@@ -9,6 +9,7 @@ authors = ["fzzr <a@koz.email>"]
 edition = "2018"
 
 [dependencies]
+wap-rpm = { path = "rpm" }
 wap-res = { path = "res" }
 wap-wwd = { path = "wwd" }
 wap-pcx = { path = "pcx" }
@@ -16,12 +17,19 @@ wap-ani = { path = "ani" }
 wap-pid = { path = "pid" }
 wap-img = { path = "img" }
 wap-crypto = { path = "crypto" }
-wap-utils = { path = "utils" }
+wap-common = { path = "common" }
+wap-utils = { path = "utils" } # TODO: move into wap-common
 gruntz-txt = { path = "txt", optional = true }
 
 [features]
+default = ["gruntz", "image", "fxhash"]
 gruntz = ["gruntz-txt"]
-default = ["gruntz"]
+image = ["wap-pid/image", "wap-img/image"]
+fxhash = [
+    "wap-common/fxhash",
+    "wap-res/fxhash",
+    "wap-rpm/fxhash",
+    ]
 
 
 # [profile.dev.overrides.pcx]

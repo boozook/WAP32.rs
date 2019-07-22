@@ -2,11 +2,11 @@ use std::io::{prelude::*, SeekFrom};
 
 extern crate zero;
 
-extern crate wap_res;
-use wap_res::node::Node;
+extern crate wap_res as res;
+use res::node::Node;
 
-extern crate wap_utils;
-use wap_utils::size_of;
+extern crate wap_common as common;
+use common::utils::size_of;
 
 pub(crate) mod ds;
 use self::ds::*;

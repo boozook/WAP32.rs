@@ -7,4 +7,4 @@ edition = "2018"
 [dependencies]
 zero = "0.1.2"
 wap-res = { path = "../res" }
-wap-utils = { path = "../utils" }
+wap-common = { path = "../common" }

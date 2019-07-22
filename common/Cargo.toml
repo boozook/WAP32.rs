@@ -1,0 +1,17 @@
+[package]
+name = "wap-common"
+version = "0.1.0"
+authors = ["fzzr <a@koz.email>"]
+edition = "2018"
+
+
+[dependencies]
+wap-utils = { path = "../utils" }
+# TODO: use fxhash instead std:::HashMap
+# https://crates.io/crates/fxhash
+# https://github.com/gfx-rs/gfx/commit/8472a7875d944f1dba3aa564736dfc90b6328b12
+fxhash = { version = "0.2.1", optional = true }
+
+
+# [features]
+# default = [ "fxhash" ]

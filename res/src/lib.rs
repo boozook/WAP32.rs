@@ -1,8 +1,7 @@
-extern crate zero;
+extern crate wap_common as common;
 
 pub mod node;
 pub mod pack;
-pub mod rpm;
-
-mod uri;
-pub(crate) mod ds;
+pub mod uri;
+pub mod index;
+pub mod reader;

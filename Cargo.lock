@@ -115,6 +115,11 @@ version = "1.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
+name = "futures"
+version = "0.1.25"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[[package]]
 name = "fxhash"
 version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -392,11 +397,13 @@ version = "0.1.0"
 dependencies = [
  "gruntz-txt 0.1.0",
  "wap-ani 0.1.0",
+ "wap-common 0.1.0",
  "wap-crypto 0.1.0",
  "wap-img 0.1.0",
  "wap-pcx 0.1.0",
  "wap-pid 0.1.0",
  "wap-res 0.1.0",
+ "wap-rpm 0.1.0",
  "wap-utils 0.1.0",
  "wap-wwd 0.1.0",
 ]
@@ -405,9 +412,17 @@ dependencies = [
 name = "wap-ani"
 version = "0.1.0"
 dependencies = [
+ "wap-common 0.1.0",
  "wap-res 0.1.0",
- "wap-utils 0.1.0",
  "zero 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "wap-common"
+version = "0.1.0"
+dependencies = [
+ "fxhash 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "wap-utils 0.1.0",
 ]
 
 [[package]]
@@ -452,9 +467,17 @@ dependencies = [
 name = "wap-res"
 version = "0.1.0"
 dependencies = [
- "fxhash 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "wap-utils 0.1.0",
+ "wap-common 0.1.0",
  "zero 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "wap-rpm"
+version = "0.1.0"
+dependencies = [
+ "futures 0.1.25 (registry+https://github.com/rust-lang/crates.io-index)",
+ "wap-common 0.1.0",
+ "wap-res 0.1.0",
 ]
 
 [[package]]
@@ -467,8 +490,8 @@ version = "0.1.0"
 dependencies = [
  "byteorder 1.2.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "libflate 0.1.18 (registry+https://github.com/rust-lang/crates.io-index)",
+ "wap-common 0.1.0",
  "wap-res 0.1.0",
- "wap-utils 0.1.0",
  "zero 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
@@ -494,6 +517,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 "checksum crossbeam-utils 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)" = "2760899e32a1d58d5abb31129f8fae5de75220bc2176e77ff7c627ae45c918d9"
 "checksum deflate 0.7.19 (registry+https://github.com/rust-lang/crates.io-index)" = "8a6abb26e16e8d419b5c78662aa9f82857c2386a073da266840e474d5055ec86"
 "checksum either 1.5.0 (registry+https://github.com/rust-lang/crates.io-index)" = "3be565ca5c557d7f59e7cfcf1844f9e3033650c929c6566f511e8005f205c1d0"
+"checksum futures 0.1.25 (registry+https://github.com/rust-lang/crates.io-index)" = "49e7653e374fe0d0c12de4250f0bdb60680b8c80eed558c5c7538eec9c89e21b"
 "checksum fxhash 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)" = "c31b6d751ae2c7f11320402d34e41349dd1016f8d5d45e48c4312bc8625af50c"
 "checksum generic-array 0.9.0 (registry+https://github.com/rust-lang/crates.io-index)" = "ef25c5683767570c2bbd7deba372926a55eaae9982d7726ee2a1050239d45b9d"
 "checksum gif 0.10.1 (registry+https://github.com/rust-lang/crates.io-index)" = "dd4bca55ac1f213920ce3527ccd62386f1f15fa3f1714aeee1cf93f2c416903f"

@@ -1,4 +1,7 @@
 //! test WWDs loaded from Pack
+extern crate wap_res as res;
+extern crate wap_wwd as wwd;
+extern crate wap_common as common;
 
 #[path = "../../tests/test_data_paths.rs"]
 mod test_data_paths;
@@ -7,16 +10,11 @@ use self::test_data_paths::*;
 use std::fs::File;
 use std::path::PathBuf;
 
-extern crate wap_res;
-extern crate wap_wwd;
-extern crate wap_utils;
+use wwd::read_as_wwd;
 
-use wap_wwd::read_as_wwd;
-
-use wap_res::*;
-use wap_res::node::NodeType;
-use wap_res::pack::*;
-use wap_res::rpm::*;
+use res::*;
+use res::pack::*;
+use res::pack::*;
 
 
 #[inline]
@@ -44,7 +42,7 @@ fn read_wwd_package_zzz() {
 	let (pack, mut stream) = pack.split();
 	let index = pack.index();
 
-	for (_path, node) in &index.nodes {
+	for (_path, node) in index.nodes() {
 		let wwd = read_as_wwd(&node, &mut stream).unwrap();
 		assert!(wwd.0.len() > 0);
 

@@ -247,7 +247,7 @@ pub mod header_flags {
 #[cfg(test)]
 mod tests {
 	use super::*;
-	use wap_utils::size_of;
+	use common::utils::size_of;
 
 	#[test]
 	fn struct_sizes() {
