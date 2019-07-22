@@ -29,7 +29,7 @@ pub struct AnimationDurations {
 /// Durations for each frame of animation
 impl AnimationDurations {
 	pub fn frames_num(&self) -> usize { self.durations.len() }
-	pub fn default_with_frames(num: usize) -> Self { Self { durations: vec![DEFAULT_ANIMATION_DURATION; num], } }
+	pub fn default_with_frames(num: usize) -> Self { Self { durations: vec![DEFAULT_ANIMATION_DURATION; num] } }
 }
 
 impl Default for AnimationDurations {

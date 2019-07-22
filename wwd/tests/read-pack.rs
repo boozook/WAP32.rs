@@ -24,12 +24,10 @@ fn open_package(filename: &str, kind: PackageType) -> Result<OpenPackage<File>, 
 	println!("read package from path: {:?}", path);
 
 	let file = File::open(&path)?;
-	let pack = Package::new(
-	                        path.to_str()
+	let pack = Package::new(path.to_str()
 	                            .expect(&format!("Can't open the package {:?}.", filename))
 	                            .to_string(),
-	                        kind,
-	);
+	                        kind);
 	Ok(pack.open_with(file))
 }
 

@@ -98,7 +98,7 @@ pub fn read_as_pid<'a, 'b, T: Seek + Read>(node: &'a Node, from: &'b mut T) -> R
 
 	Ok(Pid { info: info.info,
 	         palette,
-	         indices, })
+	         indices })
 }
 
 
@@ -141,10 +141,10 @@ fn read_pid_header_noseek<'a, 'b, T: Seek + Read>(_node: &'a Node, from: &'b mut
 	                     lights,
 	                     transparent,
 	                     video_memory,
-	                     system_memory, };
+	                     system_memory };
 	let result = PidInfoInternal { rle,
 	                               info,
-	                               embedded_palette, };
+	                               embedded_palette };
 	Ok(result)
 }
 
@@ -154,7 +154,9 @@ fn read_pid_header_noseek<'a, 'b, T: Seek + Read>(_node: &'a Node, from: &'b mut
 /// Reads indixes. Indices points to colors in a palette.
 /// Empty colors (transparent or COLOR_MASK) is skipped.
 /// So if we want use specified "empty color" we should prefill `indices`.
-fn read_indices_to<'a, 'b, 'c, 'd, T: Seek + Read>(node: &'a Node, from: &'b mut T, to: &'d mut [u8],
+fn read_indices_to<'a, 'b, 'c, 'd, T: Seek + Read>(node: &'a Node,
+                                                   from: &'b mut T,
+                                                   to: &'d mut [u8],
                                                    info: &'c PidInfoInternal)
                                                    -> Result<()>
 {

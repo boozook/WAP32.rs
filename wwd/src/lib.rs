@@ -144,24 +144,24 @@ pub fn read_as_wwd<'a, 'b, T: Seek + Read>(node: &'a Node, from: &'b mut T) -> R
 
 
 	// DEBUG: print planes info & positions:
-		/* {
-			log!("print planes info & positions:");
-			for i in 0..header.planes_num {
-				let head = plane_heads[i as usize];
-				// log!("\t plane {} , head: \n\t{:?}", i, head);
-				log!("\t\t offset: {} ( {} )", head.offset, head.offset - header.planes_offset);
-				log!(
-					"\t\t objects offset : {} ( {} )",
-					head.objects_offset,
-					head.objects_offset as i32 - header.planes_offset as i32
-				);
-				log!(
-					"\t\t image sets names offset: {} ( {} )",
-					head.image_sets_names_offset,
-					head.image_sets_names_offset as i32 - header.planes_offset as i32
-				);
-			}
-		} */
+	/* {
+		log!("print planes info & positions:");
+		for i in 0..header.planes_num {
+			let head = plane_heads[i as usize];
+			// log!("\t plane {} , head: \n\t{:?}", i, head);
+			log!("\t\t offset: {} ( {} )", head.offset, head.offset - header.planes_offset);
+			log!(
+				"\t\t objects offset : {} ( {} )",
+				head.objects_offset,
+				head.objects_offset as i32 - header.planes_offset as i32
+			);
+			log!(
+				"\t\t image sets names offset: {} ( {} )",
+				head.image_sets_names_offset,
+				head.image_sets_names_offset as i32 - header.planes_offset as i32
+			);
+		}
+	} */
 
 
 	// tilesets:
@@ -205,7 +205,10 @@ pub fn read_as_wwd<'a, 'b, T: Seek + Read>(node: &'a Node, from: &'b mut T) -> R
 			let head = plane_heads[i];
 
 			// log!("\t plane {}, position: {}", i, position);
-			debug_assert_eq!(head.image_sets_names_offset as i32 - header.planes_offset as i32, position as i32);
+			debug_assert_eq!(
+			                 head.image_sets_names_offset as i32 - header.planes_offset as i32,
+			                 position as i32
+			);
 
 			let mut sets = Vec::new();
 			let mut names = Vec::with_capacity(head.tilesets_num as usize);
@@ -258,7 +261,10 @@ pub fn read_as_wwd<'a, 'b, T: Seek + Read>(node: &'a Node, from: &'b mut T) -> R
 			let objects = if head.objects_num == 0 {
 				Vec::with_capacity(0)
 			} else {
-				debug_assert_eq!(head.objects_offset as i32 - header.planes_offset as i32, position as i32);
+				debug_assert_eq!(
+				                 head.objects_offset as i32 - header.planes_offset as i32,
+				                 position as i32
+				);
 
 				let mut objects: Vec<WapObject> = Vec::with_capacity(head.objects_num as usize);
 				for i in 0..head.objects_num {
@@ -301,13 +307,11 @@ pub fn read_as_wwd<'a, 'b, T: Seek + Read>(node: &'a Node, from: &'b mut T) -> R
 						WapObjectTraits { name,
 						                  logic,
 						                  graphic,
-						                  animation, }
+						                  animation }
 					};
 
 					let properties = *block;
-					objects.push(WapObject { i,
-					                         traits,
-					                         properties, });
+					objects.push(WapObject { i, traits, properties });
 				}
 				objects
 			};
@@ -326,7 +330,7 @@ pub fn read_as_wwd<'a, 'b, T: Seek + Read>(node: &'a Node, from: &'b mut T) -> R
 			                       tiles,
 			                       tileset,
 			                       tileset_names,
-			                       objects, };
+			                       objects };
 			planes.push(plane);
 			i += 1;
 		}

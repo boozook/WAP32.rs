@@ -116,7 +116,7 @@ pub struct PxBufSized<F: PxFmt, T> {
 impl<F: PxFmt, T> PxBuf<F, T> {
 	pub fn new(pixels: Vec<T>) -> Self {
 		Self { buffer: pixels,
-		       _format: PhantomData, }
+		       _format: PhantomData }
 	}
 
 	pub fn into_inner(self) -> Vec<T> { self.buffer }
@@ -138,7 +138,7 @@ impl<F: PxFmt> PxBufSized<F, u8> {
 		                 "incorrect dimensions"
 		);
 		PxBufSized { inner: PxBuf::new(pixels),
-		             size: [width, height], }
+		             size: [width, height] }
 	}
 
 	pub fn new_rect(pixels: Vec<u8>, side: u32) -> Self { Self::new(pixels, side, side) }

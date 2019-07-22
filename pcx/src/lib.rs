@@ -36,7 +36,10 @@ type Pcx<T> = PxBufSized<format::RGB, T>;
 
 
 #[inline]
-pub fn reader_for_pcx<'a, 'b, R: Seek + Read>(node: &'a Node, r: &'b mut R) -> Result<pcx::Reader<Take<&'b mut R>>> {
+pub fn reader_for_pcx<'a, 'b, R: Seek + Read>(node: &'a Node,
+                                              r: &'b mut R)
+                                              -> Result<pcx::Reader<Take<&'b mut R>>>
+{
 	r.seek(SeekFrom::Start(node.offset as u64))?;
 	pcx::Reader::new(r.take(node.size as u64))
 }

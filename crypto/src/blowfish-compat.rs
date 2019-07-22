@@ -53,7 +53,7 @@ pub fn decrypt(buf: &mut [u8], key: &[u8]) -> Result<(), InvalidKeyLength> {
 	Ok(())
 }
 
-pub fn decrypt_stream<R: Read>(reader: &mut R, key: &[u8], out: &mut Write) -> Result<(), std::io::Error> {
+pub fn decrypt_stream<R: Read, W: Write>(reader: &mut R, key: &[u8], out: &mut W) -> Result<(), std::io::Error> {
 	let cypher = BlowfishCompat::new_varkey(key).unwrap();
 	let mut buf = [0; BLOCK];
 	loop {
@@ -82,7 +82,7 @@ impl BlockCipher for BlowfishCompat {
 	type BlockSize = <Blowfish as BlockCipher>::BlockSize;
 	type ParBlocks = <Blowfish as BlockCipher>::ParBlocks;
 
-	fn new(key: &GenericArray<u8, U56>) -> Self { Self { inner: <Blowfish as BlockCipher>::new(key), } }
+	fn new(key: &GenericArray<u8, U56>) -> Self { Self { inner: <Blowfish as BlockCipher>::new(key) } }
 
 	fn new_varkey(key: &[u8]) -> Result<Self, InvalidKeyLength> {
 		<Blowfish as BlockCipher>::new_varkey(key).map(|bf| Self { inner: bf })

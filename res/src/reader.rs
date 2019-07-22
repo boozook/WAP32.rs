@@ -136,7 +136,8 @@ pub fn read_to<R: Read + Seek>(from: &mut R, to: &mut Index) -> Result<(), IoErr
 	Ok(())
 }
 
-pub fn read_ref_to<R: Read + Seek>(from: &mut R, push_node: fn(d: UriRef, f: UriRef, Node) -> (),
+pub fn read_ref_to<R: Read + Seek>(from: &mut R,
+                                   push_node: fn(d: UriRef, f: UriRef, Node) -> (),
                                    push_dir: fn(uri: UriRef, files: &[Uri]) -> ())
                                    -> Result<(), IoError>
 {

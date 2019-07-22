@@ -10,15 +10,15 @@ use res::node::*;
 use wwd::read_as_wwd;
 
 
-static WWDS: [&str; 2] = ["tests/data/BombzAway!.wwd", "tests/data/GRUNTZREZ_AREA8_WORLDZ_LEVEL29.WWD"];
+static WWDS: [&str; 2] = ["tests/data/BombzAway!.wwd",
+                          "tests/data/GRUNTZREZ_AREA8_WORLDZ_LEVEL29.WWD"];
 
 
 #[inline]
 fn read_wwd_file(path: &str) -> Result<(), std::io::Error> {
 	let mut file = File::open(path)?;
 	let node = Node { offset: 0,
-	                  size: std::fs::metadata(&path)?.len() as u32,
-	                  /* t: NodeType::Wwd, */ };
+	                  size: std::fs::metadata(&path)?.len() as u32 /* t: NodeType::Wwd, */ };
 	let wwd = read_as_wwd(&node, &mut file)?;
 	assert!(wwd.0.len() > 0);
 

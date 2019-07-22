@@ -43,9 +43,7 @@ impl<P> Package<P> {
 	#[inline]
 	pub fn is_empty(&self) -> bool { self.index.is_empty() }
 
-	pub fn open_with<R: Read + Seek>(self, reader: R) -> OpenPackage<R, P> {
-		OpenPackage { inner: self, reader }
-	}
+	pub fn open_with<R: Read + Seek>(self, reader: R) -> OpenPackage<R, P> { OpenPackage { inner: self, reader } }
 }
 
 

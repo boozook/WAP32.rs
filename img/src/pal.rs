@@ -17,7 +17,11 @@ pub fn read_palette_256<'a, 'b, R: Seek + Read>(node: &'a Node, from: &'b mut R)
 
 /// Read 256-colors palette from the end of buffer.
 #[inline]
-pub fn read_palette_256_to<'a, 'b, R: Seek + Read>(node: &'a Node, from: &'b mut R, to: &'b mut [u8]) -> Result<()> {
+pub fn read_palette_256_to<'a, 'b, R: Seek + Read>(node: &'a Node,
+                                                   from: &'b mut R,
+                                                   to: &'b mut [u8])
+                                                   -> Result<()>
+{
 	if !(node.offset == 0 && node.size == 256 * 3) {
 		// ommit seek for exactly pal-files
 		from.seek(SeekFrom::Start((node.offset + (node.size - (256 * 3))) as u64))?;

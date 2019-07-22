@@ -7,13 +7,11 @@ pub struct Node {
 
 	/// Size of block.
 	pub size: u32,
-
 	// /// Type of node
 	// pub t: Format,
 }
 
-pub struct TypedNode<'n>
-{
+pub struct TypedNode<'n> {
 	pub n: &'n Node,
 	pub t: Format,
 }

@@ -43,6 +43,5 @@ pub fn parse_ini(buf: &[u8]) -> Result<Ini, ParseError> {
 	let s = unsafe { std::str::from_utf8_unchecked(buf) };
 
 	// TODO: remove /* // commets */
-
 	Ini::load_from_str(s)
 }

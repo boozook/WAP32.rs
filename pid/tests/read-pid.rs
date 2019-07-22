@@ -23,8 +23,7 @@ fn read_pid_file(path: &str) -> Result<Pid<format::RGB>, std::io::Error> {
 	use std::fs::File;
 	let mut file = File::open(path)?;
 	let node = Node { offset: 0,
-	                  size: std::fs::metadata(&path)?.len() as u32,
-	                  /* t: Format::Pid */ };
+	                  size: std::fs::metadata(&path)?.len() as u32 /* t: Format::Pid */ };
 	read_as_pid(&node, &mut file)
 }
 
@@ -116,7 +115,8 @@ fn pid_build_image() -> Result<(), std::io::Error> {
 			image::ImageRgb8(imgbuf)
 		} else {
 			let size = *pid.size();
-			let imgbuf = ImageBuffer::<Luma<u8>, _>::from_raw(*size.width(), *size.height(), pid.indices.into_inner()).unwrap();
+			let imgbuf =
+				ImageBuffer::<Luma<u8>, _>::from_raw(*size.width(), *size.height(), pid.indices.into_inner()).unwrap();
 			image::ImageLuma8(imgbuf)
 		};
 		save_image(path, img);
